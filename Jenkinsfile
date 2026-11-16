@@ -16,7 +16,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'Test stage'
+        bat '''
+            docker run --rm ^
+            -v "%CD%:/workspace" ^
+            node:18-alpine ^
+            sh -c "test -f /workspace/build/index.html"
+        '''
             }
         }
     }
