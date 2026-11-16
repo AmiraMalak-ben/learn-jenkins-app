@@ -19,12 +19,14 @@ sh -c "mkdir -p /app && cp -r /workspace/. /app/ && cd /app && npm ci --no-audit
         
 stage('Test') {
     steps {
-        bat '''
-            docker run --rm ^
-            -v "%CD%:/workspace" ^
-            node:18-alpine ^
-            sh -c "ls -la /workspace/build && test -f /workspace/build/index.html"
-        '''
+       bat '''
+                    docker run --rm ^
+                    -v "%CD%:/workspace" ^
+                    -v npm-cache:/root/.npm ^
+                    -w /workspace ^
+                    node:18-alpine ^
+                    sh -c "npm test -- --watchAll=false"
+                '''
     }
 }
 
